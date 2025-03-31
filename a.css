@@ -57,3 +57,90 @@
 .dropdown-item.active .item-desc {
   opacity: 1;
 }
+
+
+
+
+
+
+/* Container for dropdown */
+.dropdown-container,
+#dropdown {
+  background-color: #252526;
+  border-radius: 4px;
+  width: 340px;
+  padding: 4px;
+  position: absolute;
+  z-index: 999;
+  display: none;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Dropdown item */
+.dropdown-item {
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: none;
+  color: white;
+  padding: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.dropdown-item:hover,
+.dropdown-item.selected {
+  background-color: #094771;
+}
+
+/* Inner content layout */
+.item-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+/* Icon + label group */
+.item-left {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Icon */
+.item-icon {
+  margin-right: 0.5rem;
+  flex-shrink: 0;
+  font-size: 1.2em;
+}
+
+/* Label */
+.item-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+}
+
+/* Hint text */
+.item-hint {
+  margin-left: 0.5rem;
+  font-size: 0.75rem;
+  color: #999999;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 30px;
+  opacity: 1;
+}
+
+/* When no hint, hide it */
+.item-hint.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
