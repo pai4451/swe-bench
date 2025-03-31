@@ -233,3 +233,42 @@
     });
   }
 })();
+
+
+
+function renderDropdown() {
+  dropdown.innerHTML = '';
+  filteredOptions.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'dropdown-item' + (i === activeIndex ? ' selected' : '');
+    btn.setAttribute('data-testid', 'context-provider-dropdown-item');
+
+    const iconSVG = getIconSVG(opt.label);
+    const hintVisible = opt.hint && opt.hint.trim() !== '';
+    const hintIconSVG = getHintIconSVG();
+
+    btn.innerHTML = `
+      <span class="item-content">
+        <div class="item-left">
+          ${iconSVG}
+          <span class="item-label" title="${opt.value || opt.label}">${opt.label}</span>
+        </div>
+        <span class="item-hint${hintVisible ? '' : ' hidden'}">
+          ${opt.hint || ''}
+          ${hintVisible ? hintIconSVG : ''}
+        </span>
+      </span>
+    `;
+
+    btn.addEventListener('click', () => {
+      if (opt.label === 'Files' && !inSubmenu) {
+        vscode.postMessage({ command: 'getFiles' });
+        inSubmenu = true;
+      } else {
+        insertSelectedText('@' + opt.label);
+      }
+    });
+
+    dropdown.appendChild(btn);
+  });
+}
