@@ -1,0 +1,203 @@
+import * as vscode from 'vscode';
+
+export function activate(context: vscode.ExtensionContext) {
+  context.subscriptions.push(
+    vscode.commands.registerCommand('chatContext.openChat', () => {
+      const panel = vscode.window.createWebviewPanel(
+        'chatPanel',
+        'Chat Panel',
+        vscode.ViewColumn.One,
+        {
+          enableScripts: true,
+          retainContextWhenHidden: true,
+        }
+      );
+
+      panel.webview.html = getWebviewContent(panel.webview, context.extensionUri);
+    })
+  );
+}
+
+function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri): string {
+  const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'media', 'main.js'));
+  const styleUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'media', 'style.css'));
+
+  return /* html */ `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link href="${styleUri}" rel="stylesheet">
+    </head>
+    <body>
+      <div id="chat-container">
+        <div id="messages"></div>
+        <div id="input-area">
+          <input id="chat-input" type="text" placeholder="Type something..." />
+          <ul id="dropdown" class="hidden"></ul>
+        </div>
+      </div>
+      <script src="${scriptUri}"></script>
+    </body>
+    </html>
+  `;
+}
+
+
+
+
+
+
+
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #1e1e1e;
+  color: #ddd;
+}
+
+#chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+#messages {
+  flex-grow: 1;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+#input-area {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
+  background-color: #2d2d2d;
+}
+
+#chat-input {
+  padding: 0.5rem;
+  font-size: 16px;
+  background-color: #1e1e1e;
+  border: 1px solid #444;
+  color: white;
+}
+
+#dropdown {
+  list-style: none;
+  margin-top: 5px;
+  padding: 0;
+  background-color: #252526;
+  border: 1px solid #444;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+#dropdown li {
+  padding: 0;
+}
+
+#dropdown button.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 12px;
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+#dropdown button.dropdown-item:hover,
+#dropdown button.dropdown-item.active {
+  background-color: #094771;
+  color: white;
+}
+
+#dropdown svg {
+  flex-shrink: 0;
+  color: #ccc;
+}
+
+
+
+
+
+
+const input = document.getElementById('chat-input');
+const dropdown = document.getElementById('dropdown');
+
+const options = ['@File', '@Code', '@Git Diff', '@Current File'];
+let selectedIndex = -1;
+
+input.addEventListener('input', () => {
+  const value = input.value;
+  if (value.endsWith('@')) {
+    showDropdown();
+  } else {
+    hideDropdown();
+  }
+});
+
+input.addEventListener('keydown', (e) => {
+  const isVisible = !dropdown.classList.contains('hidden');
+
+  if (isVisible) {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      selectedIndex = (selectedIndex + 1) % options.length;
+      updateDropdown();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      selectedIndex = (selectedIndex - 1 + options.length) % options.length;
+      updateDropdown();
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (selectedIndex >= 0) {
+        const selectedText = options[selectedIndex].replace('@', '');
+        input.value += selectedText + ' ';
+        hideDropdown();
+      }
+    } else if (e.key === 'Escape') {
+      hideDropdown();
+    }
+  }
+});
+
+dropdown.addEventListener('click', (e) => {
+  const btn = e.target.closest('button.dropdown-item');
+  if (btn) {
+    const index = parseInt(btn.dataset.index, 10);
+    const selectedText = options[index].replace('@', '');
+    input.value += selectedText + ' ';
+    hideDropdown();
+    input.focus();
+  }
+});
+
+function showDropdown() {
+  dropdown.innerHTML = options.map((opt, i) =>
+    `<li>
+      <button class="dropdown-item ${i === selectedIndex ? 'active' : ''}" data-index="${i}">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="2" fill="none" />
+        </svg>
+        <span>${opt}</span>
+      </button>
+    </li>`
+  ).join('');
+  dropdown.classList.remove('hidden');
+}
+
+function updateDropdown() {
+  showDropdown();
+}
+
+function hideDropdown() {
+  dropdown.classList.add('hidden');
+  selectedIndex = -1;
+}
