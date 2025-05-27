@@ -291,3 +291,35 @@ SWE-Bench is not representative of the scale, diversity, or structure of product
 ✅ Key Takeaway
 “To evaluate real-world agentic repair, we must move beyond open-source benchmarks like SWE-Bench.
 GITS-Eval was built to reflect the real challenges engineers face at scale — and models must be tested accordingly.”
+
+Building GITS-Eval: A Rigorous, Multi-Phase Curation Pipeline
+🧾 Goal:
+To construct a high-quality, representative, and tractable bug benchmark for evaluating agentic repair (Passerine) in a realistic enterprise setting.
+
+🏗️ Step-by-Step Filtering Process (Based on Fig. 1)
+Phase	Purpose	Key Filters
+Phase 0	Initial filtering of 80K+ bugs from GITS (2024/6/21 – 8/30)	✅ Verified bugs only
+✅ Single patch per bug
+✅ Non-empty description
+✅ Internal-only
+⛔ Removed ~60K unsuitable bugs (non-reproducible, no test/source change)	
+➡️ Remaining: 15K human bugs + 1K machine bugs (SAN/TOD)	
+Phase 1	Ensure changes are meaningful and testable	✅ Patch affects code/test files
+✅ Plausibility is measurable
+Phase 2	Ensure feasibility for agent evaluation	⛔ Remove bugs with:
+📸 multimedia content
+📄 overly large patches
+⏱️ long test times
+➡️ Remaining: 7K human, 1K machine bugs	
+Phase 3	Final curation for high precision & representativeness	✅ Manual filtering to remove:
+🔹 flaky tests
+🔹 magic constants
+🔹 test inadequacies
+✅ Final sets: 78 curated human bugs, 100 curated machine bugs	
+
+✅ Final Outcome: GITS-Eval = 178 Bugs
+Source Type	Count
+Human-reported bugs	78
+Machine-reported bugs (SAN + TOD)	100
+
+🧠 GITS-Eval balances realism and feasibility — making it a credible foundation for evaluating LLM-based agents in industrial codebases.
