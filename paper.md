@@ -209,3 +209,49 @@ What This Tells Us
 ---
 
 Would you like me to export this to a PowerPoint/Keynote format or generate speaker notes next?
+
+
+
+ Summary: Industrial-Scale Agentic Program Repair at Google
+📊 Benchmark – GITS-Eval (178 Real Bugs)
+Curated from Google’s internal issue tracking system (GITS), the GITS-Eval dataset includes:
+
+78 human-reported bugs
+
+100 machine-reported bugs, split into:
+
+50 Sanitizer bugs (via static analysis)
+
+50 TOD bugs (Test Order Dependency)
+
+All bugs are reproducible, testable, and aligned with agent capabilities.
+
+🤖 Agent – Passerine
+A lightweight LLM-based agent for automated repair, designed to operate within Google’s developer ecosystem.
+
+Architecture: ReAct loop (Think → Act → Observe)
+
+Command set:
+
+cat: View file contents
+
+code_search: Search monorepo
+
+edit: Modify source
+
+bazel: Build & run tests
+
+finish: Terminate repair
+
+Minimalist yet expressive — fully API-integrated into Google’s infra
+
+📈 Results (Using Gemini 1.5 Pro, 20 trajectories/bug)
+Bug Type	Plausible Patch Rate	Valid Patch Rate (Manual)
+🧠 Human Bugs	25.6%	17.9%
+⚙️ Machine Bugs	73.0%	43.0%
+
+🟢 Machine-reported bugs are significantly easier to fix due to structured bug descriptions (e.g., test targets, repro info).
+🔵 Human-reported bugs show challenges in localization and patch precision.
+
+🧠 Key Insight:
+Bug report quality, not just model capability, is a primary driver of agent performance.
