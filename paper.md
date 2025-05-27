@@ -255,3 +255,39 @@ Bug Type	Plausible Patch Rate	Valid Patch Rate (Manual)
 
 🧠 Key Insight:
 Bug report quality, not just model capability, is a primary driver of agent performance.
+
+
+🧪 Why GITS-Eval Matters: A Realistic Benchmark for Enterprise-Scale APR
+1. 📊 Google-Built Benchmark: GITS-Eval (178 Bugs)
+A curated evaluation set sourced from Google’s internal issue tracking system (GITS), covering:
+
+78 Human-reported bugs
+
+100 Machine-reported bugs, split into:
+
+50 from automated sanitizers (e.g., null dereference, buffer overflows)
+
+50 from test-order dependency analyzers (e.g., test A influences test B)
+
+🧠 Carefully filtered to ensure agent suitability: reproducible, testable, patchable.
+
+2. 🔍 GITS-Eval ≠ SWE-Bench: Fundamental Differences
+By comparing 2,000 GITS bugs to SWE-Bench, the authors highlight major divergences:
+
+Language diversity: SWE-Bench is Python-only; GITS includes C++, Java, Go, etc.
+
+Patch complexity: GITS fixes span more files, more lines, higher dispersion.
+
+Bug description signal: GITS often lacks code-like terms, increasing localization difficulty.
+
+🧠 A model that excels on SWE-Bench may underperform in real-world industrial settings.
+
+3. 🚫 SWE-Bench ≠ Enterprise Reality
+The authors explicitly do not claim Passerine performs well on SWE-Bench or SWE-Bench-Lite.
+
+🧠 Their stance: Enterprise bugs require enterprise-grade benchmarks.
+SWE-Bench is not representative of the scale, diversity, or structure of production bugs faced in practice.
+
+✅ Key Takeaway
+“To evaluate real-world agentic repair, we must move beyond open-source benchmarks like SWE-Bench.
+GITS-Eval was built to reflect the real challenges engineers face at scale — and models must be tested accordingly.”
